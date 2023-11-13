@@ -1,5 +1,10 @@
 'use client'
-import { useState } from "react"
+import { useState } from "react";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "@/services/initFireBase";
+
+
+
 
 const Register = () =>{
 
@@ -9,9 +14,20 @@ const Register = () =>{
     const [confirmPassword, setConfirmPassword] = useState('');
 
    
-    const register = (e) => {
-        e.preventDefault();
-     
+    const register = () => {
+       
+        console.log(firstName,email,password, confirmPassword);
+        createUserWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+            // Signed up 
+            const user = userCredential.user;
+            // ...
+        })
+        .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            // ..
+        });
         
       }
      
@@ -19,8 +35,7 @@ const Register = () =>{
         e.preventDefault();
         let isValid = true;
         const emailRegex = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/
-
-        console.log(firstName,email,password, confirmPassword);
+        register();
 
     }  
 
