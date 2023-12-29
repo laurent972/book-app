@@ -2,12 +2,10 @@ import Link from "next/link";
 
 const Navigation = () =>{
     return(
-        <>
-            <Link href="/">Accueil</Link>
-            <Link href='/register'>Register</Link>
-            <Link href='/login'>Login</Link>
-          
-        </>
+        <div className="flex flex-col pt-6 px-3">
+            <Link href="/dashboard">Tablau de bord</Link>
+            <Link href='/books'>Mes livres</Link>
+        </div>
        
     )
 }

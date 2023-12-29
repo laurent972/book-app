@@ -1,7 +1,7 @@
 const SearchEngine = () =>{
     return(
         <>
-        <input type="text" />
+        <input type="text" className="border rounded bg-slate-50 p"/>
         </>
         
     )
