@@ -26,6 +26,9 @@ module.exports = {
       colors: {
         'border-gray': '#243c5a',
       },
+      fontFamily: {
+        'sans': ['"Lato"', 'Arial', 'sans-serif']
+      },
     }
   },
   plugins: [],

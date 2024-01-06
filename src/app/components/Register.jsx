@@ -2,6 +2,9 @@
 import { useState } from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "@/services/initFireBase";
+import { collection, doc, setDoc } from "firebase/firestore";
+import { db } from "@/services/initFireBase";
+
 
 
 
@@ -21,6 +24,8 @@ const Register = () =>{
         .then((userCredential) => {
             // Signed up 
             const user = userCredential.user;
+           console.log(user.uid) 
+            db.collection('users').setDoc(user.uid)
             // ...
         })
         .catch((error) => {

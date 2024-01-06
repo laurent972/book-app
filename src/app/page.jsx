@@ -7,7 +7,6 @@ import Link from "next/link";
 
 const users = collection(db, 'users')
 
-console.log(users)
 
 const querySnapshot = await getDocs(collection(db, "users"));
 
@@ -25,7 +24,7 @@ export default function Home() {
   return (
       <>
         <Login />
-        ou <Link href="/register">s'enregistrer</Link>
+       
       </>
   )
 }
