@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "@/services/initFireBase";
-import { collection, doc, setDoc } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 import { db } from "@/services/initFireBase";
 
 
@@ -15,25 +15,47 @@ const Register = () =>{
     const [email,setEmail] = useState('');
     const [password,setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-
+    const [userId, setUserId] = useState('');
    
-    const register = () => {
+    const register = async () => {
+        try{
+            const res = await createUserWithEmailAndPassword(auth, email, password)
+            const userId = res.user.uid;
+            console.log(res.user);
+            await setDoc(doc(db, "users", userId), {
+                email: email,
+              });
+        }catch(error){
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            console.log(errorCode+errorMessage)
+        }
+            
+      
        
-        console.log(firstName,email,password, confirmPassword);
-        createUserWithEmailAndPassword(auth, email, password)
+       /* console.log(firstName,email,password, confirmPassword);
+        await createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
-            // Signed up 
-            const user = userCredential.user;
-           console.log(user.uid) 
-            db.collection('users').setDoc(user.uid)
-            // ...
-        })
+         // Signed up 
+        const user = userCredential.user;
+        setUserId(userCredential.user.uid)
+        console.log(userCredential.user.uid);
+         })
         .catch((error) => {
             const errorCode = error.code;
             const errorMessage = error.message;
+
+            console.log(errorMessage)
             // ..
         });
-        
+        console.log(userId);
+
+        await setDoc(doc(db, "users", userId), {
+            name: "tddr",
+            state: "CA",
+            country: "USA"
+        });*/
+                
       }
      
     const handleValidate = (e) =>{
