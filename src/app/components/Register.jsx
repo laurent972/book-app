@@ -4,6 +4,9 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "@/services/initFireBase";
 import { doc, setDoc } from "firebase/firestore";
 import { db } from "@/services/initFireBase";
+import Image from "next/image";
+
+import logo from '../../../public/assets/logo.svg';
 
 
 
@@ -16,6 +19,11 @@ const Register = () =>{
     const [password,setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [userId, setUserId] = useState('');
+    const [errorFirstname,setErrorFirstname] = useState('');
+    const [errorEmail, setErrorEmail] = useState('');
+    const [errorConfirm, setErrorConfirm] = useState('');
+    const [isValid, setIsValid] = useState(true);
+    const [verifAccount, setVerifAccount] = useState('');
    
     const register = async () => {
         try{
@@ -28,50 +36,71 @@ const Register = () =>{
         }catch(error){
             const errorCode = error.code;
             const errorMessage = error.message;
-            console.log(errorCode+errorMessage)
+            if(error.code == 'auth/email-already-exists' || error.code == 'auth/email-already-in-use' ){
+                setVerifAccount('Ce compte existe déjà')
+            }
+            console.log(errorCode)
         }
-            
-      
-       
-       /* console.log(firstName,email,password, confirmPassword);
-        await createUserWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-         // Signed up 
-        const user = userCredential.user;
-        setUserId(userCredential.user.uid)
-        console.log(userCredential.user.uid);
-         })
-        .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-
-            console.log(errorMessage)
-            // ..
-        });
-        console.log(userId);
-
-        await setDoc(doc(db, "users", userId), {
-            name: "tddr",
-            state: "CA",
-            country: "USA"
-        });*/
-                
+                           
       }
      
     const handleValidate = (e) =>{
         e.preventDefault();
-        let isValid = true;
-        const emailRegex = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/
-        register();
+        const firstNameRegex = /^[a-zA-Z\s-]+$/;
+        const emailRegex = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
 
+       if( firstName.length <= 0 || !firstNameRegex.test(firstName)){
+            setErrorFirstname('La saisie est invalide');
+            setIsValid(false);
+        }else{
+            setErrorFirstname('')
+            setIsValid(true);
+        }
+
+        if( firstName.length <= 0 || !emailRegex.test(email)){
+            setErrorEmail('email incorrect');
+            setIsValid(false);
+        }else{
+            setErrorEmail('')
+            setIsValid(true);
+        }
+
+        if(!password.match(confirmPassword) ){
+            setErrorConfirm('Les mots de passe ne correspondent pas');
+            setIsValid(false);
+        }else{
+            setErrorConfirm('')
+            setIsValid(true);
+        }
+
+        if(isValid){
+            register();
+        }
+        console.log(isValid);
     }  
 
 
     return(
+
+        <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
+        <div className="sm:mx-auto sm:w-full sm:max-w-sm">
+         <Image 
+            src={logo}
+            className="mx-auto"
+            alt="Ma bibliothèque logo"
+            loading = 'lazy'
+            width="150px"
+            height="80px"
+        />
+
+        <h2 className="mt-5 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+            S'enregistrer
+          </h2>
         
         <form className="w-full max-w-lg" onSubmit={handleValidate}>
               <div className="flex flex-wrap -mx-3 mb-6">
-                <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                <div className="w-full  px-3 mb-6 md:mb-0">
+                    <p>{verifAccount}</p>
                     <label className="uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-first-name">
                         First Name
                     </label>
@@ -82,7 +111,9 @@ const Register = () =>{
                         placeholder="Prénom"
                         onChange={(e) => setFirstName(e.target.value)}
                         value={firstName}
+                        required
                     />
+                    <p>{errorFirstname}</p>
                     <label className="uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-email">
                         email
                     </label>
@@ -92,7 +123,9 @@ const Register = () =>{
                         type="email" 
                         placeholder="email"
                         onChange={(e) => setEmail(e.target.value)}
+                        required
                     />
+                     <p>{errorEmail}</p>
                     <label className="uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-password">
                         Mot de passe
                     </label>
@@ -100,8 +133,9 @@ const Register = () =>{
                         className="w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" 
                         id="grid-password" 
                         type="password" 
-                        placeholder="******"
+                        placeholder="Mot de passe"
                         onChange={(e) => setPassword(e.target.value)}
+                        required
                     />
                     <label className="uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-confirm-pass">
                         Confirmer mot de passe
@@ -110,10 +144,11 @@ const Register = () =>{
                         className="w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" 
                         id="grid-confirm-pass" 
                         type="password" 
-                        placeholder="******"
+                        placeholder="Verification du mot de passe"
                         onChange={(e) => setConfirmPassword(e.target.value)}
+                        required
                     />
-
+                     <p>{errorConfirm}</p>
                     <button 
                     type="submit" 
                     className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
@@ -126,7 +161,8 @@ const Register = () =>{
                 
               </div>
         </form>
-
+        </div>
+        </div>
 
     )
 }
