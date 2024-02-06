@@ -10,8 +10,6 @@ import logo from '../../../public/assets/logo.svg';
 
 
 
-
-
 const Register = () =>{
 
     const [firstName,setFirstName] =  useState('');
@@ -21,6 +19,7 @@ const Register = () =>{
     const [userId, setUserId] = useState('');
     const [errorFirstname,setErrorFirstname] = useState('');
     const [errorEmail, setErrorEmail] = useState('');
+    const [errorPassword, setErrorPassword] = useState('');
     const [errorConfirm, setErrorConfirm] = useState('');
     const [isValid, setIsValid] = useState(true);
     const [verifAccount, setVerifAccount] = useState('');
@@ -65,6 +64,14 @@ const Register = () =>{
             setIsValid(true);
         }
 
+        if(password.length <= 0  ){
+            setErrorPassword('Mot de passe incorrect');
+            setIsValid(false);
+        }else{
+            setErrorConfirm('')
+            setIsValid(true);
+        }
+
         if(!password.match(confirmPassword) ){
             setErrorConfirm('Les mots de passe ne correspondent pas');
             setIsValid(false);
@@ -76,7 +83,6 @@ const Register = () =>{
         if(isValid){
             register();
         }
-        console.log(isValid);
     }  
 
 
@@ -111,9 +117,16 @@ const Register = () =>{
                         placeholder="Prénom"
                         onChange={(e) => setFirstName(e.target.value)}
                         value={firstName}
-                        required
+                        
                     />
-                    <p>{errorFirstname}</p>
+
+                    { errorFirstname ? 
+                         <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
+                         <p>{errorFirstname}</p> 
+                         </div>
+                    : '' }
+                   
+                    
                     <label className="uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-email">
                         email
                     </label>
@@ -123,9 +136,13 @@ const Register = () =>{
                         type="email" 
                         placeholder="email"
                         onChange={(e) => setEmail(e.target.value)}
-                        required
+                        
                     />
-                     <p>{errorEmail}</p>
+                     {errorEmail ?  
+                     <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
+                        <p>{errorEmail}</p>
+                    </div>
+                    : ''}
                     <label className="uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-password">
                         Mot de passe
                     </label>
@@ -135,8 +152,14 @@ const Register = () =>{
                         type="password" 
                         placeholder="Mot de passe"
                         onChange={(e) => setPassword(e.target.value)}
-                        required
+                        
                     />
+                    {errorPassword ? 
+                        <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
+                        <p>{errorPassword}</p>
+                    </div>
+                    : ''}
+                     
                     <label className="uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-confirm-pass">
                         Confirmer mot de passe
                     </label>
@@ -146,13 +169,16 @@ const Register = () =>{
                         type="password" 
                         placeholder="Verification du mot de passe"
                         onChange={(e) => setConfirmPassword(e.target.value)}
-                        required
+                        
                     />
-                     <p>{errorConfirm}</p>
+                    {errorConfirm ? 
+                     <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
+                      <p>{errorConfirm}</p>
+                    </div>
+                    : ''}
                     <button 
                     type="submit" 
                     className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-               
                     >
                         Submit
                     </button>
