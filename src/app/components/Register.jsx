@@ -7,6 +7,7 @@ import { db } from "@/services/initFireBase";
 import Image from "next/image";
 
 import logo from '../../../public/assets/logo.svg';
+import MessageSuccess from "./Success";
 
 
 
@@ -21,17 +22,30 @@ const Register = () =>{
     const [errorEmail, setErrorEmail] = useState('');
     const [errorPassword, setErrorPassword] = useState('');
     const [errorConfirm, setErrorConfirm] = useState('');
-    const [isValid, setIsValid] = useState(true);
+    const [isValid, setIsValid] = useState(false);
     const [verifAccount, setVerifAccount] = useState('');
+    const [displayConfirm, setDisplayConfirm] = useState(false);
+
+    const message ={
+        titre:'Bienvenue !',
+        text:'Votre compte a bien été créé !',
+        button : 'Je me connecte',
+        url : '/login',
+
+    }
    
     const register = async () => {
-        try{
+        console.log('toto');
+
+       /* try{
             const res = await createUserWithEmailAndPassword(auth, email, password)
             const userId = res.user.uid;
             console.log(res.user);
             await setDoc(doc(db, "users", userId), {
                 email: email,
-              });
+              }); 
+
+           setDisplayConfirm(true) 
         }catch(error){
             const errorCode = error.code;
             const errorMessage = error.message;
@@ -39,8 +53,7 @@ const Register = () =>{
                 setVerifAccount('Ce compte existe déjà')
             }
             console.log(errorCode)
-        }
-                           
+        }  */                   
       }
      
     const handleValidate = (e) =>{
@@ -68,11 +81,11 @@ const Register = () =>{
             setErrorPassword('Mot de passe incorrect');
             setIsValid(false);
         }else{
-            setErrorConfirm('')
+            setErrorPassword('')
             setIsValid(true);
         }
 
-        if(!password.match(confirmPassword) ){
+        if(confirmPassword.length <= 0 || !password.match(confirmPassword) ){
             setErrorConfirm('Les mots de passe ne correspondent pas');
             setIsValid(false);
         }else{
@@ -80,12 +93,11 @@ const Register = () =>{
             setIsValid(true);
         }
 
-        if(isValid){
-            register();
-        }
+        if(isValid) register();
+       
     }  
 
-
+    //console.log(isValid);
     return(
 
         <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
@@ -99,7 +111,7 @@ const Register = () =>{
             height="80px"
         />
 
-        <h2 className="mt-5 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+        <h2 className="mt-5 text-center text-2xl font-bold leading-9 tracking-tight ">
             S'enregistrer
           </h2>
         
@@ -121,7 +133,7 @@ const Register = () =>{
                     />
 
                     { errorFirstname ? 
-                         <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
+                         <div className="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
                          <p>{errorFirstname}</p> 
                          </div>
                     : '' }
@@ -139,7 +151,7 @@ const Register = () =>{
                         
                     />
                      {errorEmail ?  
-                     <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
+                     <div className="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
                         <p>{errorEmail}</p>
                     </div>
                     : ''}
@@ -155,7 +167,7 @@ const Register = () =>{
                         
                     />
                     {errorPassword ? 
-                        <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
+                        <div className="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
                         <p>{errorPassword}</p>
                     </div>
                     : ''}
@@ -172,13 +184,13 @@ const Register = () =>{
                         
                     />
                     {errorConfirm ? 
-                     <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
+                     <div className="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
                       <p>{errorConfirm}</p>
                     </div>
                     : ''}
                     <button 
                     type="submit" 
-                    className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                    className="text-white bg-mid-blue hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                     >
                         Submit
                     </button>
@@ -188,7 +200,9 @@ const Register = () =>{
               </div>
         </form>
         </div>
-        </div>
+        {displayConfirm ?  <MessageSuccess message={message} /> : null}
+       
+    </div>
 
     )
 }

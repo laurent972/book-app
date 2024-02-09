@@ -6,7 +6,6 @@ module.exports = {
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
-    theme: {
       screens: {
         'sm': '640px',
         // => @media (min-width: 640px) { ... }
@@ -23,13 +22,18 @@ module.exports = {
         '2xl': '1536px',
         // => @media (min-width: 1536px) { ... }
       },
-      colors: {
-        'border-gray': '#243c5a',
+      extend: {
+        colors: {
+          'border-gray': '#243c5a',
+          'dark-blue' : '#29335C',
+          'mid-blue' : '#007FFF',
+          'light-blue' : '#00CEFF',
+        },
       },
       fontFamily: {
         'sans': ['"Lato"', 'Arial', 'sans-serif']
       },
-    }
+
   },
   plugins: [],
 }
