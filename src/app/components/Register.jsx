@@ -17,13 +17,11 @@ const Register = () =>{
     const [email,setEmail] = useState('');
     const [password,setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [userId, setUserId] = useState('');
     const [errorFirstname,setErrorFirstname] = useState('');
     const [errorEmail, setErrorEmail] = useState('');
     const [errorPassword, setErrorPassword] = useState('');
     const [errorConfirm, setErrorConfirm] = useState('');
-    const [isValid, setIsValid] = useState(false);
-    const [verifAccount, setVerifAccount] = useState('');
+    const [verifAccount, setVerifAccount] = useState(null);
     const [displayConfirm, setDisplayConfirm] = useState(false);
 
     const message ={
@@ -34,18 +32,22 @@ const Register = () =>{
 
     }
    
-    const register = async () => {
-        console.log('toto');
+    const register = async (e) => {
+        console.log(verifAccount);
+        e.preventDefault();
+        if(!handleValidate()){
+            return;
+        }
 
-       /* try{
+       try{
             const res = await createUserWithEmailAndPassword(auth, email, password)
             const userId = res.user.uid;
-            console.log(res.user);
             await setDoc(doc(db, "users", userId), {
                 email: email,
               }); 
 
            setDisplayConfirm(true) 
+           
         }catch(error){
             const errorCode = error.code;
             const errorMessage = error.message;
@@ -53,48 +55,32 @@ const Register = () =>{
                 setVerifAccount('Ce compte existe déjà')
             }
             console.log(errorCode)
-        }  */                   
+        }                     
       }
      
-    const handleValidate = (e) =>{
-        e.preventDefault();
+    const handleValidate = () =>{   
         const firstNameRegex = /^[a-zA-Z\s-]+$/;
-        const emailRegex = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
-
        if( firstName.length <= 0 || !firstNameRegex.test(firstName)){
             setErrorFirstname('La saisie est invalide');
-            setIsValid(false);
-        }else{
-            setErrorFirstname('')
-            setIsValid(true);
+            return false
         }
 
-        if( firstName.length <= 0 || !emailRegex.test(email)){
+        if( !/^[^@]+@[^@]+\.[^@]+$/.test(email)){
             setErrorEmail('email incorrect');
-            setIsValid(false);
-        }else{
-            setErrorEmail('')
-            setIsValid(true);
+            return false
         }
 
         if(password.length <= 0  ){
             setErrorPassword('Mot de passe incorrect');
-            setIsValid(false);
-        }else{
-            setErrorPassword('')
-            setIsValid(true);
+            return false
         }
 
-        if(confirmPassword.length <= 0 || !password.match(confirmPassword) ){
+        if(confirmPassword  != password ){
             setErrorConfirm('Les mots de passe ne correspondent pas');
-            setIsValid(false);
-        }else{
-            setErrorConfirm('')
-            setIsValid(true);
+            return false
         }
-
-        if(isValid) register();
-       
+        setVerifAccount(null);
+        return true
     }  
 
     //console.log(isValid);
@@ -115,10 +101,14 @@ const Register = () =>{
             S'enregistrer
           </h2>
         
-        <form className="w-full max-w-lg" onSubmit={handleValidate}>
+        <form className="w-full max-w-lg" onSubmit={register}>
               <div className="flex flex-wrap -mx-3 mb-6">
                 <div className="w-full  px-3 mb-6 md:mb-0">
-                    <p>{verifAccount}</p>
+                {verifAccount != null ?
+                    <p className="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
+                        {verifAccount}
+                    </p>
+                : null }
                     <label className="uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-first-name">
                         First Name
                     </label>
@@ -190,7 +180,7 @@ const Register = () =>{
                     : ''}
                     <button 
                     type="submit" 
-                    className="text-white bg-mid-blue hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                    className="text-white bg-mid-blue hover:bg-light-blue focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                     >
                         Submit
                     </button>

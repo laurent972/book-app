@@ -3,7 +3,7 @@ import { db } from "@/services/initFireBase";
 import { collection, query, getDocs, doc, addDoc  } from "firebase/firestore";
 
 import Login from "./components/Login";
-import Link from "next/link";
+
 
 const users = collection(db, 'users')
 
@@ -20,11 +20,11 @@ querySnapshot.forEach((doc) => {
 
 export default function Home() {
 
-
   return (
       <>
-        <Login />
        
+          <Login />
+         
       </>
   )
 }

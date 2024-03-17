@@ -1,32 +1,8 @@
-'use client'
+'Use client'
 
-import { auth } from "@/services/initFireBase";
-import { doc, setDoc } from "firebase/firestore";
-import { db } from "@/services/initFireBase";
-import ResetPassword from "../components/ResetPassword";
-import { getAuth, sendPasswordResetEmail } from "firebase/auth";
+const ResetPassword = () => {
 
-
-
-const resetPassword = () =>{
-
-    const handleResetPassword = async (event) => {
-        event.preventDefault();
-        const email = event.target.email.value;
-    
-        try {
-          await sendPasswordResetEmail(auth, email);
-          alert("Un email de réinitialisation de mot de passe a été envoyé à l'adresse " + email);
-        } catch (error) {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          console.error(errorCode, errorMessage);
-          alert("Erreur : " + errorMessage);
-        }
-      };
-
-
-    return(
+     return (
         <div className="flex items-center justify-center h-screen">
         <form onSubmit={handleResetPassword} className="w-full max-w-sm">
           <div className="md:flex md:items-center mb-6">
@@ -61,4 +37,4 @@ const resetPassword = () =>{
     )
 }
 
-export default resetPassword;
+export default ResetPassword

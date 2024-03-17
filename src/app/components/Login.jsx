@@ -6,25 +6,32 @@ import { useState } from "react";
 import Image from "next/image";
 
 import logo from '../../../public/assets/logo.svg';
+import UserContext from "../context/UserContext";
 
 
 const Login = () => {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [currentUser, setCurrentUser] = useState(null);
 
-    const handleLogin = (e) =>{
-        console.log(email,password);
+
+    const handleLogin = async(e) =>{
+        
         e.preventDefault();
-        signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-            const user = userCredential.user;
-        })
-        .catch((error) => {
+        try{
+           await signInWithEmailAndPassword(auth, email, password)
+          .then((userCredential) => {
+              const user = userCredential.user;
+              setCurrentUser(user)
+          })
+        }catch(error){
+            console.log(error);
             const errorCode = error.code;
             const errorMessage = error.message;
-        });
-
+        }
+       
+    
         onAuthStateChanged(auth, (user) => {
             if (user) {
               // User is signed in, see docs for a list of available properties
@@ -53,7 +60,7 @@ const Login = () => {
             width="150px"
             height="80px"
         />
-          <h2 className="mt-5 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+          <h2 className="mt-5 text-center text-2xl font-bold leading-9 tracking-tight ">
             Se connecter 
           </h2>
         </div>
@@ -61,7 +68,7 @@ const Login = () => {
         <div className="mt-15 sm:mx-auto sm:w-full sm:max-w-sm">
           <form className="space-y-6" action="#" method="POST" onSubmit={handleLogin} autoComplete='false'>
             <div>
-              <label htmlFor="email" className="block text-base font-medium leading-6 text-gray-900">
+              <label htmlFor="email" className="block text-base font-medium leading-6 ">
                 Email address
               </label>
               <div className="mt-2">
@@ -71,7 +78,7 @@ const Login = () => {
                   name="email"
                   type="email"
                   required
-                  className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 p-1.5  shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
@@ -79,11 +86,11 @@ const Login = () => {
 
             <div>
               <div className="flex items-center justify-between">
-                <label htmlFor="password" className="block text-base font-medium leading-6 text-gray-900">
+                <label htmlFor="password" className="block text-base font-medium leading-6 ">
                   Password
                 </label>
                 <div className="text-sm">
-                  <a href="/reset-password" className="font-semibold text-indigo-600 hover:text-indigo-500">
+                  <a href="/reset-password" className="font-semibold text-mid-blue hover:text-light-blue">
                     Mot de passe oublié ?
                   </a>
                 </div>
@@ -104,7 +111,7 @@ const Login = () => {
             <div>
               <button
                 type="submit"
-                className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                className="flex w-full justify-center rounded-md bg-mid-blue px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-light-blue focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
                 Se connecter
               </button>
@@ -112,8 +119,8 @@ const Login = () => {
           </form>
 
           <p className="mt-10 text-center text-sm text-gray-500">
-            Pas encore membre?{' '}
-            <a href="/register" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
+            Pas encore de compte ?{' '}
+            <a href="/register" className="font-semibold leading-6 text-mid-blue hover:text-light-blue">
             s'enregistrer
             </a>
           </p>
